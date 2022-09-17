@@ -1,11 +1,11 @@
-import React from "react";
-import { Image, View, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Entypo } from '@expo/vector-icons'
+import { Entypo } from "@expo/vector-icons";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-import logoImg from '../../assets/logo-nlw-esports.png';
+import logoImg from "../../assets/logo-nlw-esports.png";
 import { Background } from "../../components/Background";
 
 import { GameParams } from "../../@types/navigation";
@@ -13,14 +13,21 @@ import { GameParams } from "../../@types/navigation";
 import { styles } from "./styles";
 import { THEME } from "../../theme";
 import { Heading } from "../../components/Heading";
+import { DuoCard, DuoCardProps } from "../../components/DuoCard";
 
 export function Game() {
   const route = useRoute();
   const game = route.params as GameParams;
+  const [duos, setDuos] = useState<DuoCardProps[]>([]);
 
+  useEffect(() => {
+    fetch(`http://192.168.1.9:3333/games/${game.id}/ads`)
+      .then((response) => response.json())
+      .then((data) => setDuos(data));
+  });
   const navigation = useNavigation();
 
-  function handleGoBack(){
+  function handleGoBack() {
     navigation.goBack();
   }
 
@@ -36,11 +43,7 @@ export function Game() {
             />
           </TouchableOpacity>
 
-          <Image
-            source={logoImg}
-            style={styles.logo}
-            resizeMode="cover"
-          />
+          <Image source={logoImg} style={styles.logo} resizeMode="cover" />
 
           <View style={styles.right} />
         </View>
@@ -51,10 +54,32 @@ export function Game() {
           resizeMode="cover"
         />
 
-        <Heading
-          title={game.title}
-          subtitle="Conecte-se e comece a jogar!"
-        />
+        <Heading title={game.title} subtitle="Conecte-se e comece a jogar!" />
+
+        <FlatList
+          data={duos}
+          keyExtractor={item => item.id}
+          renderItem={ ({ item }) => (
+            <DuoCard
+              data={item}
+              onConnect={() => {}}
+            /> 
+          )}
+          horizontal
+          style={styles.containerList}
+          contentContainerStyle={duos.length != 0 ? styles.contentList :  styles.emptyListContent }
+          showsHorizontalScrollIndicator={false}
+          ListEmptyComponent={() => (
+            <Text style={styles.emptyListText}>
+              Não há anúncios para este jogo (ainda)
+            </Text>
+          )}
+        >
+
+        </FlatList>
+            
+        
+        
       </SafeAreaView>
     </Background>
   );
