@@ -26,15 +26,18 @@ export function DuoCard({ data, onConnect }: Props) {
     <View style={styles.container}>
       
       <DuoInfo
-        label="Nome" value={data.name}
+        label="Nome"
+        value={data.name}
       />
       
       <DuoInfo
-        label="Tempo de jogo" value={`${data.yearsPlaying} ano${data.yearsPlaying > 1 ? 's' : ''}`}
+        label="Tempo de jogo"
+        value={`${data.yearsPlaying} ano${data.yearsPlaying > 1 ? 's' : ''}`}
       />
       
       <DuoInfo
-        label="Disponibilidade" value={`${data.weekDays.length} dias \u2022 ${data.hourStart} - ${data.hourEnd}`}
+        label="Disponibilidade"
+        value={`${data.weekDays.length} dias \u2022 ${data.hourStart} - ${data.hourEnd}`}
       />
       
       <DuoInfo
@@ -52,7 +55,7 @@ export function DuoCard({ data, onConnect }: Props) {
           size={20}
         />
         <Text
-        style={styles.buttonTitle}
+          style={styles.buttonTitle}
         >
           Conectar
         </Text>
